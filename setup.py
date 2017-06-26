@@ -1,14 +1,17 @@
 #!/usr/bin/env python
 
 import os
-import setuptools
+from setuptools import setup, find_packages
 
-setuptools.setup(
-    name='unbabel-subword-nmt',
-    version='0.1dev',
-    description='Subword through Byte Pair Encoding',
-    long_description=open(os.path.join(os.path.dirname(
-        os.path.abspath(__file__)), 'README.md')).read(),
-    license='BSD 3-clause',
-    url='https://github.com/Unbabel/subword-nmt'
-)
+setup(name='unbabel_subword',
+      version='0.1dev',
+      description='Subword through Byte Pair Encoding',
+      author='Unbabel',
+      author_email='support@unbabel.com',
+      packages=find_packages(),
+      install_requires=[],
+      url='https://github.com/Unbabel/subword-nmt',
+      classifiers=['Intended Audience :: Unbabel',
+                   'Programming Language :: Python '],
+      license='BSD 3-clause',
+      include_package_data=True)
