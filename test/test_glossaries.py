@@ -1,16 +1,18 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import inspect
+import os
+import sys
 import unittest
-import mock
-import re
 
-import os,sys,inspect
+import mock
+
 currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 parentdir = os.path.dirname(currentdir)
 sys.path.insert(0,parentdir) 
 
-from apply_bpe import isolate_glossary, BPE
+from subword_nmt.apply_bpe import isolate_glossary, BPE
 
 class TestIsolateGlossaryFunction(unittest.TestCase):
 

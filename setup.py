@@ -3,7 +3,7 @@
 import os
 from setuptools import setup, find_packages
 
-setup(name='unbabel_subword',
+setup(name='unbabel_subword_nmt',
       version='0.1dev',
       description='Subword through Byte Pair Encoding',
       author='Unbabel',

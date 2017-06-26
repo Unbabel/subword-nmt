@@ -14,18 +14,18 @@ Proceedings of the 54th Annual Meeting of the Association for Computational Ling
 
 from __future__ import unicode_literals
 
-import sys
-import os
-import codecs
 import argparse
+import codecs
+import os
+import sys
 import tempfile
 from collections import Counter
-
-import learn_bpe
-import apply_bpe
-
 # hack for python2/3 compatibility
 from io import open
+
+import apply_bpe
+import learn_bpe
+
 argparse.open = open
 
 def create_parser():
