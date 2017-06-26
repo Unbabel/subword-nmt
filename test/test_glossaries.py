@@ -12,7 +12,7 @@ currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentfram
 parentdir = os.path.dirname(currentdir)
 sys.path.insert(0,parentdir) 
 
-from subword_nmt.apply_bpe import isolate_glossary, BPE
+from unbabel_subword_nmt.apply_bpe import isolate_glossary, BPE
 
 class TestIsolateGlossaryFunction(unittest.TestCase):
 
