@@ -61,47 +61,29 @@ def create_parser():
     return parser
 
 
-
-if __name__ == '__main__':
-
-    # python 2/3 compatibility
-    if sys.version_info < (3, 0):
-        sys.stderr = codecs.getwriter('UTF-8')(sys.stderr)
-        sys.stdout = codecs.getwriter('UTF-8')(sys.stdout)
-        sys.stdin = codecs.getreader('UTF-8')(sys.stdin)
-    else:
-        sys.stderr = codecs.getwriter('UTF-8')(sys.stderr.buffer)
-        sys.stdout = codecs.getwriter('UTF-8')(sys.stdout.buffer)
-        sys.stdin = codecs.getreader('UTF-8')(sys.stdin.buffer)
-
-    parser = create_parser()
-    args = parser.parse_args()
-
-    if args.vocab and len(args.input) != len(args.vocab):
-        sys.stderr.write('Error: number of input files and vocabulary files must match\n')
-        sys.exit(1)
+def main(input, output_name, vocab, symbols, separator, min_frequency, verbose):
 
     # read/write files as UTF-8
-    args.input = [codecs.open(f.name, encoding='UTF-8') for f in args.input]
-    args.vocab = [codecs.open(f.name, 'w', encoding='UTF-8') for f in args.vocab]
+    input = [codecs.open(f, encoding='UTF-8') for f in input]
+    vocab = [codecs.open(f, 'w', encoding='UTF-8') for f in vocab]
 
     # get combined vocabulary of all input texts
     full_vocab = Counter()
-    for f in args.input:
+    for f in input:
         full_vocab += learn_bpe.get_vocabulary(f)
         f.seek(0)
 
     vocab_list = ['{0} {1}'.format(key, freq) for (key, freq) in full_vocab.items()]
 
     # learn BPE on combined vocabulary
-    with codecs.open(args.output.name, 'w', encoding='UTF-8') as output:
-        learn_bpe.main(vocab_list, output, args.symbols, args.min_frequency, args.verbose, is_dict=True)
+    with codecs.open(output_name, 'w', encoding='UTF-8') as output:
+        learn_bpe.main(vocab_list, output, symbols, min_frequency, verbose, is_dict=True)
 
-    with codecs.open(args.output.name, encoding='UTF-8') as codes:
-        bpe = apply_bpe.BPE(codes, args.separator, None)
+    with codecs.open(output_name, encoding='UTF-8') as codes:
+        bpe = apply_bpe.BPE(codes, separator, None)
 
     # apply BPE to each training corpus and get vocabulary
-    for train_file, vocab_file in zip(args.input, args.vocab):
+    for train_file, vocab_file in zip(input, vocab):
 
         tmp = tempfile.NamedTemporaryFile(delete=False)
         tmp.close()
@@ -123,3 +105,26 @@ if __name__ == '__main__':
         for key, freq in sorted(vocab.items(), key=lambda x: x[1], reverse=True):
             vocab_file.write("{0} {1}\n".format(key, freq))
         vocab_file.close()
+
+
+
+if __name__ == '__main__':
+
+    # python 2/3 compatibility
+    if sys.version_info < (3, 0):
+        sys.stderr = codecs.getwriter('UTF-8')(sys.stderr)
+        sys.stdout = codecs.getwriter('UTF-8')(sys.stdout)
+        sys.stdin = codecs.getreader('UTF-8')(sys.stdin)
+    else:
+        sys.stderr = codecs.getwriter('UTF-8')(sys.stderr.buffer)
+        sys.stdout = codecs.getwriter('UTF-8')(sys.stdout.buffer)
+        sys.stdin = codecs.getreader('UTF-8')(sys.stdin.buffer)
+
+    parser = create_parser()
+    args = parser.parse_args()
+
+    if args.vocab and len(args.input) != len(args.vocab):
+        sys.stderr.write('Error: number of input files and vocabulary files must match\n')
+        sys.exit(1)
+
+    main([fp.name for fp in args.input], args.output.name, [fp.name for fp in args.vocab], args.symbols, args.separator, args.min_frequency, args.verbose)

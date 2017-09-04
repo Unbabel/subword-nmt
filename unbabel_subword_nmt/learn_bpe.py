@@ -176,9 +176,15 @@ def prune_stats(stats, big_stats, threshold):
                 big_stats[item] = freq
 
 
-def main(infile, outfile, num_symbols, min_frequency=2, verbose=False, is_dict=False):
+def main(infilename, outfilename, num_symbols, min_frequency=2, verbose=False, is_dict=False):
     """Learn num_symbols BPE operations from vocabulary, and write to outfile.
     """
+
+    # read/write files as UTF-8
+    if infilename != '<stdin>':
+        infile = codecs.open(infilename, encoding='utf-8')
+    if outfilename != '<stdout>':
+        outfile = codecs.open(outfilename, 'w', encoding='utf-8')
 
     # version 0.2 changes the handling of the end-of-word token ('</w>');
     # version numbering allows bckward compatibility
@@ -234,10 +240,4 @@ if __name__ == '__main__':
     parser = create_parser()
     args = parser.parse_args()
 
-    # read/write files as UTF-8
-    if args.input.name != '<stdin>':
-        args.input = codecs.open(args.input.name, encoding='utf-8')
-    if args.output.name != '<stdout>':
-        args.output = codecs.open(args.output.name, 'w', encoding='utf-8')
-
-    main(args.input, args.output, args.symbols, args.min_frequency, args.verbose, is_dict=args.dict_input)
+    main(args.input.name, args.output.name, args.symbols, args.min_frequency, args.verbose, is_dict=args.dict_input)
