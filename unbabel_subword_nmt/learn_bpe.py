@@ -180,11 +180,15 @@ def main(infilename, outfilename, num_symbols, min_frequency=2, verbose=False, i
     """Learn num_symbols BPE operations from vocabulary, and write to outfile.
     """
 
-    # read/write files as UTF-8
-    if infilename != '<stdin>':
-        infile = codecs.open(infilename, encoding='utf-8')
-    if outfilename != '<stdout>':
-        outfile = codecs.open(outfilename, 'w', encoding='utf-8')
+    if not is_dict:
+        # read/write files as UTF-8
+        if infilename != '<stdin>':
+            infile = codecs.open(infilename, encoding='utf-8')
+        if outfilename != '<stdout>':
+            outfile = codecs.open(outfilename, 'w', encoding='utf-8')
+    else:
+        infile = infilename
+        outfile = outfilename
 
     # version 0.2 changes the handling of the end-of-word token ('</w>');
     # version numbering allows bckward compatibility
