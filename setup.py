@@ -4,7 +4,7 @@ import os
 from setuptools import setup, find_packages
 
 setup(name='unbabel_subword_nmt',
-      version='0.2dev',
+      version='v0.1.1',
       description='Subword through Byte Pair Encoding',
       author='Unbabel',
       author_email='support@unbabel.com',
