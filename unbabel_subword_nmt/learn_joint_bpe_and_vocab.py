@@ -61,7 +61,7 @@ def create_parser():
     return parser
 
 
-def main(input, output_name, vocab, symbols, separator, min_frequency, verbose):
+def main(input, output_name, vocab, symbols, separator='@@', min_frequency=2, verbose=False):
 
     # read/write files as UTF-8
     input = [codecs.open(f, encoding='UTF-8') for f in input]
