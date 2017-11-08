@@ -15,6 +15,7 @@ from __future__ import unicode_literals, division
 
 import sys
 import codecs
+import io
 import argparse
 import json
 import re
@@ -62,8 +63,8 @@ class BPE(object):
                                           self.vocab,
                                           self.separator,
                                           self.version,
-                                          self.glossaries,
-                                          self.cache)]
+                                          self.cache,
+                                          self.glossaries)]
 
             for item in new_word[:-1]:
                 output.append(item + self.separator)
@@ -126,7 +127,7 @@ def get_pairs(word):
         prev_char = char
     return pairs
 
-def encode(orig, bpe_codes, bpe_codes_reverse, vocab, separator, version, glossaries=None, cache={}):
+def encode(orig, bpe_codes, bpe_codes_reverse, vocab, separator, version, cache, glossaries=None):
     """Encode word based on list of BPE merge operations, which are applied consecutively
     """
 
@@ -280,9 +281,9 @@ if __name__ == '__main__':
         sys.stdout = codecs.getwriter('UTF-8')(sys.stdout)
         sys.stdin = codecs.getreader('UTF-8')(sys.stdin)
     else:
-        sys.stderr = codecs.getwriter('UTF-8')(sys.stderr.buffer)
-        sys.stdout = codecs.getwriter('UTF-8')(sys.stdout.buffer)
-        sys.stdin = codecs.getreader('UTF-8')(sys.stdin.buffer)
+        sys.stdin = io.TextIOWrapper(sys.stdin.buffer, encoding='utf-8')
+        sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8')
+        sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', write_through=True, line_buffering=True)
 
     parser = create_parser()
     args = parser.parse_args()
